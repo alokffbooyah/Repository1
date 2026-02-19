@@ -1,12 +1,37 @@
 #Repository1
-
 import random
+
+DATA_FILE = "data.txt"
 
 khodam_tipe_a = ["Macan Ompong", "Nyi Blorong", "Sapu Lidi", "Kelinci Banyuwangi"]
 khodam_tipe_b = ["Tutup Panci", "Pohon Pisang", "Kak Gem", "Awewe Gombel"]
 
-riwayat = []
 
+# =========================
+# LOAD DATA
+# =========================
+def load_data():
+    riwayat = []
+    try:
+        with open(DATA_FILE, "r") as file:
+            for line in file:
+                riwayat.append(line.strip())
+    except FileNotFoundError:
+        pass
+    return riwayat
+
+
+# =========================
+# SAVE DATA
+# =========================
+def save_data(nama, hasil):
+    with open(DATA_FILE, "a") as file:
+        file.write(f"{nama}: {hasil}\n")
+
+
+# =========================
+# TES KEPRIBADIAN
+# =========================
 def tes_kepribadian():
     skor_a = 0
     skor_b = 0
@@ -39,8 +64,15 @@ def tes_kepribadian():
     return "A" if skor_a >= skor_b else "B"
 
 
+# =========================
+# CEK KHODAM
+# =========================
 def cek_khodam():
     nama = input("Masukkan nama Anda: ")
+    if nama.strip() == "":
+        print("Nama tidak boleh kosong!")
+        return
+
     tipe = tes_kepribadian()
 
     if tipe == "A":
@@ -49,17 +81,27 @@ def cek_khodam():
         hasil = random.choice(khodam_tipe_b)
 
     print(f"\n>>> {nama} memiliki khodam: {hasil} <<<")
-    riwayat.append(f"{nama}: {hasil}")
+
+    save_data(nama, hasil)
 
 
+# =========================
+# LIHAT RIWAYAT
+# =========================
 def lihat_riwayat():
+    riwayat = load_data()
+
     if not riwayat:
         print("Belum ada riwayat.")
     else:
+        print("\n--- RIWAYAT ---")
         for i, data in enumerate(riwayat, 1):
             print(f"{i}. {data}")
 
 
+# =========================
+# MENU UTAMA
+# =========================
 def main():
     while True:
         print("\n=== APLIKASI CEK KHODAM ===")
@@ -74,6 +116,7 @@ def main():
         elif pilih == "2":
             lihat_riwayat()
         elif pilih == "3":
+            print("Program selesai.")
             break
         else:
             print("Menu tidak tersedia.")
